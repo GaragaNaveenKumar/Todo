@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Todo</title>
+    <style>
+        body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+      }
+      
+      center {
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        max-width: 400px;
+        margin: auto;
+      }
+      
+      h1 {
+        color: #333;
+      }
+      
+      form {
+        margin-bottom: 20px;
+      }
+      
+      input[type="text"] {
+        width: 80%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      
+      input[type="submit"] {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      
+      input[type="submit"]:hover {
+        background-color: #218838;
+      }
+      
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      
+      div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        background-color: #e9ecef;
+        padding: 10px;
+        border-radius: 4px;
+      }
+      
+      li {
+        margin: 0;
+      }
+      
+      button {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      
+      button:hover {
+        background-color: #c82333;
+      }
+        
+    </style>
+  </head>
+  <body>
+    <center>
+        <h1>Todo List</h1>
+      <form id="itemform">
+        <input type="text" placeholder="Enter task" id="task-input"/><br />
+        <input type="submit" value="Add Item"/><br />
+      </form>
+      <h3>Your tasks</h3>
+      <ul id="list">No tasks to do</ul>
+    </center>
+    <script>
+        let items=JSON.parse(localStorage.getItem('items')) || []
+
+        function saveToLocalStorage(){
+            localStorage.setItem('items',JSON.stringify(items));
+        }
+        
+        function display(){
+            const list=document.getElementById('list');list.innerHTML='';
+            if (items.length==0){
+                list.innerHTML="No tasks to do";
+                return 
+            }
+            items.forEach((element,index) => {
+                 const div=document.createElement("div");
+                 const li=document.createElement("li");
+                li.textContent=element;
+                const btn=document.createElement('button');
+                btn.textContent='Delete';
+                btn.onclick=function(){
+                    deleteItem(index);
+                }
+        
+                div.appendChild(li);
+                div.appendChild(btn);
+                list.appendChild(div);
+                
+            });
+            function deleteItem(index){
+                items.splice(index,1);
+                
+                saveToLocalStorage();
+                display();
+            }
+        }
+            document.getElementById('itemform').addEventListener('submit',function(event){
+                event.preventDefault();
+                const taskInput=document.getElementById('task-input');
+                const task=taskInput.value.trim()
+                if (!task){
+                    alert('Please enter your task to add');
+
+                }else{
+                    items.push(task);
+                    saveToLocalStorage();
+                    display();
+                    taskInput.value='';
+                }
+            })
+
+            display()
+
+            
+        
+    </script>
+  </body>
+</html>
